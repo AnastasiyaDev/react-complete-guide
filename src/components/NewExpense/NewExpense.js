@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import ExpenseForm from './ExpenseForm';
 
 import './NewExpense.css';
 
 const NewExpense = (props) => {
+    const [isFormOpenFlag, setFormOpenFlag] = useState(false);
+
     const saveExpenseDataHandler = (enteredExpenseData) => {
         const expenseData = {
             ...enteredExpenseData,
@@ -14,9 +16,21 @@ const NewExpense = (props) => {
         props.onSaveExpense(expenseData);
     };
 
+    const onAddNewExpenseButtonClick = () => {
+        setFormOpenFlag(true);
+    }
+
+    const onCancelButtonClick = () => {
+        setFormOpenFlag(false);
+    }
+
     return (
         <div className="new-expense">
-            <ExpenseForm onSaveExpenseData={saveExpenseDataHandler}/>
+            {
+                isFormOpenFlag ?
+                <ExpenseForm onSaveExpenseData={saveExpenseDataHandler} onCancelButtonClick={onCancelButtonClick} /> :
+                <button type="button" onClick={onAddNewExpenseButtonClick}>Add New Expense</button>
+            }
         </div>
     );
 }
