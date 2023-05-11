@@ -11,9 +11,13 @@ class UserFinder extends Component {
         super();
 
         this.state = {
-            filteredUsers: this.context.users, // почему-то не работает, Cannot read properties of undefined (reading 'users')
+            filteredUsers: [],
             searchTerm: '',
         };
+    }
+
+    componentDidMount() {
+        this.setState({ filteredUsers: this.context.users });
     }
 
     componentDidUpdate(prevProps, prevState) {
