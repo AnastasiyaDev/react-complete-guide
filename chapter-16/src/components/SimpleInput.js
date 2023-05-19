@@ -7,13 +7,16 @@ const SimpleInput = (props) => {
     const nameIsValid = name.trim() !== '';
     const nameIsInvalid = !nameIsValid && nameIsTouched;
 
+    let formIsValid = nameIsValid;
+
+
     const onInputNameChange = event => {
         const value = event.target.value;
         setName(value);
         setNameIsTouched(true);
     }
 
-    const onInputBlur = event => {
+    const onInputNameBlur = event => {
         setNameIsTouched(true);
     }
 
@@ -41,13 +44,14 @@ const SimpleInput = (props) => {
                     type="text"
                     id="name"
                     onChange={onInputNameChange}
-                    onBlur={onInputBlur}
+                    onBlur={onInputNameBlur}
                     value={name}
                 />
                 { nameIsInvalid && <p className="error-text">Name is empty!</p>}
             </div>
+
             <div className="form-actions">
-                <button>Submit</button>
+                <button disabled={!formIsValid}>Submit</button>
             </div>
         </form>
     );
