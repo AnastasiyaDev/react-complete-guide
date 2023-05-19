@@ -6,9 +6,22 @@ const SimpleInput = (props) => {
     const [nameIsTouched, setNameIsTouched] = useState(false);
 
     const onInputNameChange = event => {
-        setName(event.target.value);
+        const value = event.target.value;
+        setName(value);
         setNameIsTouched(true);
         setNameIsValid(true);
+
+        if (value.trim() !== '') {
+            setNameIsValid(true);
+        }
+    }
+
+    const onInputBlur = event => {
+        setNameIsTouched(true);
+
+        if (name.trim() === '') {
+            setNameIsValid(false);
+        }
     }
 
     const onFormSubmit = event => {
@@ -32,7 +45,12 @@ const SimpleInput = (props) => {
         <form onSubmit={onFormSubmit} className={formClass}>
             <div className="form-control">
                 <label htmlFor="name">Your Name</label>
-                <input type="text" id="name" onChange={onInputNameChange}/>
+                <input
+                    type="text"
+                    id="name"
+                    onChange={onInputNameChange}
+                    onBlur={onInputBlur}
+                />
                 { nameIsInvalid && <p className="error-text">Name is empty!</p>}
             </div>
             <div className="form-actions">
