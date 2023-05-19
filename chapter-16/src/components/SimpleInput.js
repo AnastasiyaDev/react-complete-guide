@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import useInput from '../hooks/use-input';
 
 const SimpleInput = (props) => {
@@ -12,42 +10,23 @@ const SimpleInput = (props) => {
         reset: resetName,
     } = useInput(value => value.trim() !== '');
 
-    const [email, setEmail] = useState('');
-    const [emailIsTouched, setEmailIsTouched] = useState(false);
-
-    const validateEmail = (email) => {
-        const regexp = /\S+@\S+\.\S+/;
-        return regexp.test(email);
-    }
-
-    const emailIsValid = validateEmail(email) && email.trim() !== '';
-    const emailIsInvalid = !emailIsValid && emailIsTouched;
+    const {
+        value: email,
+        isValid: emailIsValid,
+        hasError: inputEmailHasError,
+        onInputValueChange: onInputEmailChange,
+        onInputValueBlur: onInputEmailBlur,
+        reset: resetEmail,
+    } = useInput(value => value.trim() !== '' && /\S+@\S+\.\S+/.test(value));
 
     let formIsValid = nameIsValid && emailIsValid;
-
-
-    const onInputEmailChange = event => {
-        const value = event.target.value;
-        setEmail(value);
-        setEmailIsTouched(true);
-    }
-
-    const onInputEmailBlur = event => {
-        setEmailIsTouched(true);
-    }
 
     const onFormSubmit = event => {
         event.preventDefault();
 
-        if (!nameIsValid) {
-            return;
-        }
-
         console.log(name, email); // send data
-        resetName('');
-
-        setEmail('');
-        setEmailIsTouched(false);
+        resetName();
+        resetEmail();
     }
 
 
@@ -65,7 +44,7 @@ const SimpleInput = (props) => {
                 { inputNameHasError && <p className="error-text">Name is empty!</p>}
             </div>
 
-            <div className={ `form-control${emailIsInvalid ? ' invalid' : '' }` }>
+            <div className={ `form-control${inputEmailHasError ? ' invalid' : '' }` }>
                 <label htmlFor="name">Your Email</label>
                 <input
                     type="text"
@@ -74,7 +53,7 @@ const SimpleInput = (props) => {
                     onBlur={onInputEmailBlur}
                     value={email}
                 />
-                { emailIsInvalid && <p className="error-text">Email is not valid!</p>}
+                { inputEmailHasError && <p className="error-text">Email is not valid!</p>}
             </div>
 
             <div className="form-actions">
