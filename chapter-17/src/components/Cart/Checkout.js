@@ -30,8 +30,8 @@ const Checkout = (props) => {
 
         const nameIsValid = !isEmpty(name);
         const streetIsValid = !isEmpty(street);
-        const cityIsValid = !isEmpty(postal);
-        const postalCodeIsValid = isFiveChars(city);
+        const cityIsValid = !isEmpty(city);
+        const postalCodeIsValid = isFiveChars(postal);
 
         setFormInputsValidity({
             name: nameIsValid,
