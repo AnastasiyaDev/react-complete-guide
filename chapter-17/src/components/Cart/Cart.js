@@ -1,5 +1,7 @@
 import { useContext, useState } from 'react';
 
+import useHttp from '../../hooks/use-http';
+
 import Modal from '../UI/Modal';
 import CartItem from './CartItem';
 import classes from './Cart.module.css';
@@ -8,6 +10,7 @@ import Checkout from './Checkout';
 
 const Cart = (props) => {
     const [isCheckout, setIsCheckout] = useState(false);
+    const { isLoading, error, sendRequest: saveOrder } = useHttp();
     const cartCtx = useContext(CartContext);
 
     const totalAmount = `$${ cartCtx.totalAmount.toFixed(2) }`;
@@ -24,6 +27,19 @@ const Cart = (props) => {
     const onOrderButtonClick = () => {
         setIsCheckout(true);
     }
+
+    const onSubmitOrder = async (userData) => {
+        const requestConfig = {
+            url: 'https://react-food-order-8550c-default-rtdb.europe-west1.firebasedatabase.app/orders.json',
+            method: 'POST',
+            body: { user: userData, products: cartCtx.items },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+
+        saveOrder(requestConfig);
+    };
 
     const cartItems = (
         <ul className={ classes['cart-items'] }>
@@ -57,7 +73,7 @@ const Cart = (props) => {
                 <span>{ totalAmount }</span>
             </div>
 
-            {isCheckout && <Checkout onCancel={ props.onClose } />}
+            {isCheckout && <Checkout onCancel={ props.onClose } onSubmit={onSubmitOrder}/>}
             {!isCheckout && modalActions}
 
 
